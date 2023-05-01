@@ -1,7 +1,7 @@
 Lab 07 - Conveying the right message through visualisation
 ================
-Insert your name here
-Insert date here
+Rowan Kemmerly
+5/1/2023
 
 ### Load packages and data
 
