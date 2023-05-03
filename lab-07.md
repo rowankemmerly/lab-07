@@ -7,16 +7,110 @@ Rowan Kemmerly
 
 ``` r
 library(tidyverse) 
+library(lubridate)
 ```
 
 ### Exercise 1
 
-Remove this text, and add your answer for Exercise 1 here. Add code
-chunks as needed. Don’t forget to label your code chunk. Do not use
-spaces in code chunk labels.
+``` r
+maskcounties <- tribble(
+  ~date, ~count,
+  "7/12/2020", 25,
+  "7/13/2020", 19.5,
+  "7/14/2020", 19.5,
+  "7/15/2020", 20,
+  "7/16/2020", 19.5,
+  "7/17/2020", 19.5,
+  "7/18/2020", 20,
+  "7/19/2020", 19.5,
+  "7/20/2020", 19.75,
+  "7/21/2020", 21.5,
+  "7/22/2020", 20,
+  "7/23/2020", 20,
+  "7/24/2020", 20.5,
+  "7/25/2020", 19,
+  "7/26/2020", 19.5,
+  "7/27/2020", 17,
+  "7/28/2020", 16,
+  "7/29/2020", 16.25,
+  "7/30/2020", 16.5,
+  "7/31/2020", 16,
+  "8/1/2020", 16,
+  "8/2/2020", 16,
+  "8/3/2020", 16,
+)
+
+nomaskcounties <- tribble(
+  ~date, ~count,
+  "7/12/2020", 10,
+  "7/13/2020", 9,
+  "7/14/2020", 9.5,
+  "7/15/2020", 9.75,
+  "7/16/2020", 10,
+  "7/17/2020", 9.5,
+  "7/18/2020", 9.5,
+  "7/19/2020", 9,
+  "7/20/2020", 8.5,
+  "7/21/2020", 8.5,
+  "7/22/2020", 8.5,
+  "7/23/2020", 8.5,
+  "7/24/2020", 10,
+  "7/25/2020", 10,
+  "7/26/2020", 10,
+  "7/27/2020", 9.5,
+  "7/28/2020", 9.5,
+  "7/29/2020", 9.5,
+  "7/30/2020", 10,
+  "7/31/2020", 9,
+  "8/1/2020", 9,
+  "8/2/2020", 9,
+  "8/3/2020", 9,
+)
+```
 
 ### Exercise 2
 
-…
+``` r
+#converting "date" variables to actual date variable using lubridate:
 
-Add exercise headings as needed.
+maskcounties$date <- mdy(maskcounties$date)
+nomaskcounties$date <- mdy(nomaskcounties$date)
+
+typeof(maskcounties$date)
+```
+
+    ## [1] "double"
+
+``` r
+newviz <- ggplot() +
+  geom_line(data = maskcounties, aes(x = date, y = count, color = "With mask mandate")) + 
+  geom_line(data = nomaskcounties, aes(x = date, y = count, color = "Without mask mandate")) +
+  labs(title = "Kansas COVID-19 7-day rolling average of daily cases/per 100k population in 2020", subtitle = "Counties with a mask mandate vs. counties without mask mandates", x = "Date", y = "Average cases per 100k individuals", color = "County mask mandate status") +
+  theme_classic() +
+  scale_color_manual(values = c("With mask mandate" = "#fdae6b", "Without mask mandate" = "#a6bddb"))
+
+newviz
+```
+
+![](lab-07_files/figure-gfm/new-visualization-1.png)<!-- -->
+
+### Exercise 3
+
+Covid case numbers were always higher in counties with a mask mandate
+than in counties without a mask mandate. Now that both lines are using
+the same y axis, this is much clearer.
+
+### Exercise 4
+
+This graph seems counterintuitive at first: you would think mask
+mandates would lead to lower numbers of Covid cases. However, it could
+be possible that transmission rates are higher in higher population
+counties, which could be a covariate with counties that have mask
+mandates (more population dense counties might be more likely to set
+mask mandates). So, even though this graph shows Covid numbers by 100k
+in population, it’s still possible that numbers will be higher overall
+in more population dense areas, even with mask mandates in place. I’ve
+also read a decent number of articles (like this one:
+<https://www.nytimes.com/2022/05/31/briefing/masks-mandates-us-covid.html>)
+that talk about how wearing masks works, but that mandates don’t work,
+so this graph would sort of go along with that kind of claim.
